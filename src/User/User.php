@@ -1,5 +1,10 @@
 <?php
 
+namespace App\User;
+
+use App\Auth\Interface\AuthInterface;
+use App\User\Trait\CountableTrait;
+
 abstract class User implements AuthInterface
 {
     use CountableTrait;

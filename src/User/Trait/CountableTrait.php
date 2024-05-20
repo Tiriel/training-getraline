@@ -1,5 +1,7 @@
 <?php
 
+namespace App\User\Trait;
+
 trait CountableTrait
 {
     protected static int $count = 0;

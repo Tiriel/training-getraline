@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Vehicle;
+
+use App\User\Trait\CountableTrait;
+
 class Vehicle
 {
     use CountableTrait;

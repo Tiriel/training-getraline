@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Auth\Exception;
+
 class AuthenticationException extends \Exception
 {
     public function __construct(string $login)
