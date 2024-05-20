@@ -1,32 +1,11 @@
 <?php
 
-class Member
+class Member extends User
 {
-    public function __construct(
-        protected string $login,
-        protected string $password,
-        protected int $age,
-    ) {
-    }
-
-    public function getLogin(): string
-    {
-        return $this->login;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-    public function getAge(): int
-    {
-        return $this->age;
-    }
-
+    protected static int $count = 0;
 
     public function auth(string $login, string $password): bool
     {
-        return $login === $this->login && $password === $this->password;
+        return $this->login === $login && $this->password === $password;
     }
 }
