@@ -6,6 +6,10 @@ class Member extends User
 
     public function auth(string $login, string $password): bool
     {
-        return $this->login === $login && $this->password === $password;
+        if($this->login !== $login || $this->password !== $password) {
+            throw new AuthenticationException($login);
+        }
+
+        return true;
     }
 }

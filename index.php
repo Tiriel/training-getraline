@@ -1,6 +1,8 @@
 <?php
 
 require_once __DIR__.'/AuthInterface.php';
+require_once __DIR__.'/AuthenticationException.php';
+require_once __DIR__. '/CountableTrait.php';
 require_once __DIR__.'/User.php';
 require_once __DIR__.'/Member.php';
 require_once __DIR__.'/AdminLevel.php';
@@ -19,9 +21,14 @@ unset($m1);
 echo "Members : ".Member::count()."\n";
 echo "Admins : ".Admin::count()."\n";
 
-//echo sprintf("Login : %s\nPassword : %s\nAge: %d\n",
-//    $a1->getLogin(),
-//    $a1->getPassword(),
-//    $a1->getAge()
-//);
-//echo 'Auth : ' . ($a1->auth('Benjamin', 'abcd124') ? "Yes\n" : "No\n");
+echo sprintf("Login : %s\nPassword : %s\nAge: %d\n",
+    $a1->getLogin(),
+    $a1->getPassword(),
+    $a1->getAge()
+);
+
+try {
+    echo 'Auth : ' . ($m2->auth('Benjamin', 'abcd124') ? "Yes\n" : "No\n");
+} catch (AuthenticationException $e) {
+    echo $e->getMessage()."\n";
+}
