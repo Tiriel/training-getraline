@@ -1,0 +1,8 @@
+<aside>
+    All movies by decades:
+    <ul>
+        {% for decade in decades %}
+            <li><a href="#">Movies from the {{ decade.year }}'s</a></li>
+        {% endfor %}
+    </ul>
+</aside>

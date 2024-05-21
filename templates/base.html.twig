@@ -18,6 +18,8 @@
         {% endblock %}
     </header>
         {% block body %}{% endblock %}
+        {{ render_esi(controller('App\\Controller\\MovieController::decades')) }}
+{#        <twig:MovieDecades></twig:MovieDecades>#}
         <twig:Footer name="SensioLabs"></twig:Footer>
     </body>
 </html>

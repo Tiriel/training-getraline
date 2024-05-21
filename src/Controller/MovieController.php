@@ -17,7 +17,7 @@ class MovieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_movie_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_movie_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function show(int $id): Response
     {
         $movie = [
@@ -32,5 +32,21 @@ class MovieController extends AbstractController
         return $this->render('movie/show.html.twig', [
             'movie' => $movie,
         ]);
+    }
+
+    public function decades(): Response
+    {
+        $decades = [
+            ['year' => 1970],
+            ['year' => 1980],
+            ['year' => 1990],
+            ['year' => 2000],
+        ];
+
+        $response = new Response($this->render('includes/_decades.html.twig', [
+            'decades' => $decades,
+        ]));
+
+        return $response;
     }
 }
