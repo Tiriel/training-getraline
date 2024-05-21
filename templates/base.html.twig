@@ -12,6 +12,11 @@
         {% endblock %}
     </head>
     <body>
+    <header>
+        {% block navbar %}
+            <twig:Navbar></twig:Navbar>
+        {% endblock %}
+    </header>
         {% block body %}{% endblock %}
         <twig:Footer name="SensioLabs"></twig:Footer>
     </body>
