@@ -25,7 +25,7 @@ class MovieController extends AbstractController
             'title' => 'Star Wars - Episode IV : A New Hope',
             'country' => 'United States',
             'plot' => 'A young farmer breaks his fathers toys.',
-            'releasedAt' => new \DateTimeImmutable('25/05/1977'),
+            'releasedAt' => new \DateTimeImmutable('25-05-1977'),
             'genres' => ['Action', 'Adventure', 'Fantasy'],
         ];
 
