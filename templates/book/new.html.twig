@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'New Book' %}
+
+{% block body %}
+    <div class="example-wrapper container w-50 m-auto">
+        <h1>New Book</h1>
+
+        <section>
+            {{ form_start(form) }}
+            {{ form_row(form.title) }}
+            {{ form_row(form.author) }}
+            {{ form_row(form.editor) }}
+            {{ form_row(form.isbn) }}
+            {{ form_row(form.releasedAt) }}
+            {{ form_row(form.cover) }}
+            {{ form_row(form.plot) }}
+            {{ form_row(form.price) }}
+            <button class="btn btn-primary" type="submit">Submit</button>
+            {{ form_rest(form) }}
+            {{ form_end(form) }}
+        </section>
+    </div>
+{% endblock %}

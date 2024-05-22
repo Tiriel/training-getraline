@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Book;
+use App\Form\BookType;
 use App\Repository\BookRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,6 +31,17 @@ class BookController extends AbstractController
     {
         return $this->render('book/show.html.twig', [
             'book' => $book,
+        ]);
+    }
+
+    #[Route('/new', name: 'app_book_new', methods: ['GET', 'POST'])]
+    public function new(): Response
+    {
+        $book = new Book();
+        $form = $this->createForm(BookType::class, $book);
+
+        return $this->render('book/new.html.twig', [
+            'form' => $form,
         ]);
     }
 }
