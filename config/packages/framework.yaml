@@ -5,6 +5,7 @@ framework:
     annotations: false
     http_method_override: false
     handle_all_throwables: true
+    http_cache: ~
 
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
@@ -14,7 +15,7 @@ framework:
         cookie_samesite: lax
 
     esi: true
-    #fragments: true
+    fragments: true
     php_errors:
         log: true
 

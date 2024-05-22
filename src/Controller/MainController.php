@@ -36,8 +36,17 @@ class MainController extends AbstractController
             return $this->redirectToRoute('app_main_contact');
         }
 
-        return $this->render('main/contact.html.twig', [
+        $content = $this->renderView('main/contact.html.twig', [
             'form' => $form,
         ]);
+
+        $hash = md5($content);
+        $response = (new Response())->setEtag($hash);
+
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
+        return $response->setContent($content);
     }
 }

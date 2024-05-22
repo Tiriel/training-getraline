@@ -16,6 +16,18 @@ class MovieRepository extends ServiceEntityRepository
         parent::__construct($registry, Movie::class);
     }
 
+    public function getLastUpdatedAt(int $id): \DateTimeImmutable
+    {
+        $sql = 'SELECT m.updated_at FROM movie as m WHERE m.id = :id;';
+
+        $stmt = $this->getEntityManager()
+            ->getConnection()
+            ->prepare($sql);
+        $stmt->bindValue('id', $id, \PDO::PARAM_INT);
+
+        return $stmt->executeQuery()->fetchOne();
+    }
+
     //    /**
     //     * @return Movie[] Returns an array of Movie objects
     //     */
