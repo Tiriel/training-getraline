@@ -12,7 +12,12 @@
             {{ form_row(form.author) }}
             {{ form_row(form.editor) }}
             {{ form_row(form.isbn) }}
-            {{ form_row(form.releasedAt) }}
+            <div class="row mb-3">
+                {{ form_label(form.releasedAt, null, {label_attr: {class: 'col-form-label col-sm-3 required'}}) }}
+                <div class="col-sm-9">
+                    {{ form_widget(form.releasedAt) }}
+                </div>
+            </div>
             {{ form_row(form.cover) }}
             {{ form_row(form.plot) }}
             {{ form_row(form.price) }}
