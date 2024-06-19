@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
 #[Route('/movie')]
@@ -30,9 +31,15 @@ class MovieController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_movie_show', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function show(int $id, MovieRepository $repository, Request $request, CacheInterface $cache): Response
-    {
-        $lastUpdated = $cache->get(Movie::class.$id, fn() => null);
+    public function show(
+        int $id,
+        MovieRepository $repository,
+        Request $request,
+        CacheInterface $cache,
+        SluggerInterface $slugger
+    ): Response {
+        $key = $slugger->slug(Movie::class.'-'. $id);
+        $lastUpdated = $cache->get($key, fn() => null);
         $response = (new Response())->setLastModified($lastUpdated);
 
         if ($response->isNotModified($request)) {
