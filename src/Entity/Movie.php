@@ -43,6 +43,12 @@ class Movie
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $imdbId = null;
+
+    #[ORM\Column(length: 15, nullable: true)]
+    private ?string $rated = null;
+
     public function __construct()
     {
         $this->genres = new ArrayCollection();
@@ -157,6 +163,30 @@ class Movie
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getImdbId(): ?string
+    {
+        return $this->imdbId;
+    }
+
+    public function setImdbId(?string $imdbId): static
+    {
+        $this->imdbId = $imdbId;
+
+        return $this;
+    }
+
+    public function getRated(): ?string
+    {
+        return $this->rated;
+    }
+
+    public function setRated(?string $rated): static
+    {
+        $this->rated = $rated;
 
         return $this;
     }
