@@ -19,9 +19,8 @@ use Symfony\Contracts\Cache\CacheInterface;
 class MovieController extends AbstractController
 {
     #[Route('', name: 'app_movie_index', methods: ['GET'])]
-    public function index(MovieRepository $repository, Request $request): Response
+    public function index(MovieRepository $repository, Request $request, int $limit): Response
     {
-        $limit = 9;
         $page = $request->query->getInt('page', 1);
         $movies = $repository->findBy([], [], $limit, ($page - 1) * $limit);
 
