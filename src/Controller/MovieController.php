@@ -2,20 +2,16 @@
 
 namespace App\Controller;
 
-use App\Consumer\OmdbApiConsumer;
 use App\Entity\Movie;
-use App\Enum\SearchType;
 use App\Form\MovieType;
+use App\Provider\MovieProvider;
 use App\Repository\MovieRepository;
-use App\Transformer\OmdbToGenreTransformer;
-use App\Transformer\OmdbToMovieTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\Clock\Clock;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -56,16 +52,10 @@ class MovieController extends AbstractController
     }
 
     #[Route('/omdb/{title}', name: 'app_movie_omdb', methods: ['GET'])]
-    public function omdb(string $title, OmdbApiConsumer $consumer, OmdbToMovieTransformer $movieTransformer, OmdbToGenreTransformer $genreTransformer): Response
+    public function omdb(string $title, MovieProvider $provider): Response
     {
-        $data = $consumer->fetch($title, SearchType::Title);
-        $movie = $movieTransformer->transform($data);
-        foreach (explode(', ', $data['Genre']) as $name) {
-            $movie->addGenre($genreTransformer->transform($name));
-        }
-
         return $this->render('movie/show.html.twig', [
-            'movie' => $movie,
+            'movie' => $provider->getOne($title),
         ]);
     }
 
