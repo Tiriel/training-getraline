@@ -39,7 +39,7 @@ class MovieController extends AbstractController
         SluggerInterface $slugger
     ): Response {
         $key = $slugger->slug(Movie::class.'-'. $id);
-        $lastUpdated = $cache->get($key, fn() => null);
+        $lastUpdated = $cache->get($key, fn() => new \DateTimeImmutable());
         $response = (new Response())->setLastModified($lastUpdated);
 
         if ($response->isNotModified($request)) {
