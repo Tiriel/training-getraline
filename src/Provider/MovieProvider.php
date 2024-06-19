@@ -5,6 +5,7 @@ namespace App\Provider;
 use App\Consumer\OmdbApiConsumer;
 use App\Entity\Movie;
 use App\Enum\SearchType;
+use App\Provider\GenreProvider;
 use App\Provider\ProviderInterface;
 use App\Repository\MovieRepository;
 use App\Transformer\OmdbToMovieTransformer;
@@ -18,28 +19,49 @@ class MovieProvider implements ProviderInterface
         protected readonly OmdbToMovieTransformer $transformer,
         protected readonly GenreProvider $genreProvider,
         protected readonly EntityManagerInterface $manager,
-    )
-    {
+    ) {
     }
 
-    public function getOne(string $value, SearchType $type = SearchType::Title): object
+    public function getOne(string $value, SearchType $type = SearchType::Title): Movie
     {
-        $movie = $this->repository->findLikeOmdb($value, $type);
-
+        $movie = $this->searchDb($value, $type);
         if ($movie instanceof Movie) {
             return $movie;
         }
 
-        $data = $this->consumer->fetch($value, $type);
+        $data = $this->searchApi($value, $type);
+        $movie = $this->buildMovie($data);
+
+        $this->saveMovie($movie);
+
+        return $movie;
+    }
+
+    protected function searchDb(string $value, SearchType $type): ?Movie
+    {
+        return $this->repository->findLikeOmdb($value, $type);
+    }
+
+    protected function searchApi(string $value, SearchType $type): array
+    {
+        return $this->consumer->fetch($value, $type);
+    }
+
+    protected function buildMovie(array $data): Movie
+    {
         $movie = $this->transformer->transform($data);
 
-        foreach ($this->genreProvider->getOmdb($data['Genre']) as $genre) {
+        $genres = $this->genreProvider->getOmdb($data['Genre']);
+        foreach ($genres as $genre) {
             $movie->addGenre($genre);
         }
 
+        return $movie;
+    }
+
+    protected function saveMovie(Movie $movie): void
+    {
         $this->manager->persist($movie);
         $this->manager->flush();
-
-        return $movie;
     }
 }
