@@ -7,7 +7,7 @@ security:
         app_admin_users:
             memory:
                 users:
-                    admin@admin.com: { password: '%env(ADMIN_PWD)%', roles: [ROLE_USER, ROLE_ADMIN] }
+                    admin@admin.com: { password: '%env(ADMIN_PWD)%', roles: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH] }
         app_entity_users:
             entity:
                 class: App\Entity\User
@@ -15,6 +15,19 @@ security:
         app_all_users:
             chain:
                 providers: [app_admin_users, app_entity_users]
+
+    access_decision_manager:
+        strategy: affirmative #priority, consensus, unanimous
+        allow_if_all_abstain: false
+        allow_if_equal_granted_denied: true
+
+    role_hierarchy:
+        ROLE_USER: ~
+        ROLE_PROVIDER: ROLE_USER
+        ROLE_MODERATOR: ROLE_USER
+        ROLE_ADMIN:
+            - ROLE_PROVIDER
+            - ROLE_MODERATOR
 
     firewalls:
         dev:
@@ -38,12 +51,14 @@ security:
             # https://symfony.com/doc/current/security.html#the-firewall
 
             # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+            switch_user: true
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/(login|register)$, roles: PUBLIC_ACCESS }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/, roles: IS_AUTHENTICATED }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
