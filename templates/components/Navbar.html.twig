@@ -7,5 +7,13 @@
             <twig:NavLink label="Book" target="app_book_index"></twig:NavLink>
             <twig:NavLink label="Contact" target="app_main_contact"></twig:NavLink>
         </ul>
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            {% if app.user %}
+            <twig:NavLink label="Logout" target="app_logout"></twig:NavLink>
+            {% else %}
+            <twig:NavLink label="Register" target="app_register"></twig:NavLink>
+            <twig:NavLink label="Login" target="app_login"></twig:NavLink>
+            {% endif %}
+        </ul>
     </div>
 </nav>
