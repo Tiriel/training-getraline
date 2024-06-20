@@ -13,6 +13,7 @@ use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\Clock\Clock;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -55,12 +56,10 @@ class MovieController extends AbstractController
         ], $response);
     }
 
+    #[IsGranted(MovieUnderageVoter::UNDERAGE, 'movie')]
     #[Route('/omdb/{title}', name: 'app_movie_omdb', methods: ['GET'])]
-    public function omdb(string $title, MovieProvider $provider): Response
+    public function omdb(#[ValueResolver('movie_title')] ?Movie $movie): Response
     {
-        $movie = $provider->getOne($title);
-        $this->denyAccessUnlessGranted(MovieUnderageVoter::UNDERAGE, $movie);
-
         return $this->render('movie/show.html.twig', [
             'movie' => $movie,
         ]);
