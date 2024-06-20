@@ -4,12 +4,18 @@ namespace App\Security\Voter;
 
 use App\Entity\Movie;
 use App\Entity\User;
+use App\Event\MovieUnderageEvent;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class MovieUnderageVoter implements VoterInterface
 {
     public const UNDERAGE = 'movie.underage';
+
+    public function __construct(protected readonly EventDispatcherInterface $dispatcher)
+    {
+    }
 
     /**
      * @inheritDoc
@@ -32,6 +38,10 @@ class MovieUnderageVoter implements VoterInterface
             'R', 'NC-17' => $user->getAge() && $user->getAge() >= 17,
             default => false,
         };
+
+        if (!$vote) {
+            $this->dispatcher->dispatch(new MovieUnderageEvent($subject, $user));
+        }
 
         return $vote ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
     }
