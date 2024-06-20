@@ -6,6 +6,7 @@ use App\Entity\Movie;
 use App\Form\MovieType;
 use App\Provider\MovieProvider;
 use App\Repository\MovieRepository;
+use App\Security\Voter\MovieUnderageVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\CacheItem;
@@ -13,6 +14,7 @@ use Symfony\Component\Clock\Clock;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -45,17 +47,22 @@ class MovieController extends AbstractController
         if ($response->isNotModified($request)) {
             return $response;
         }
+        $movie = $repository->find($id);
+        $this->denyAccessUnlessGranted(MovieUnderageVoter::UNDERAGE, $movie);
 
         return $this->render('movie/show.html.twig', [
-            'movie' => $repository->find($id),
+            'movie' => $movie
         ], $response);
     }
 
     #[Route('/omdb/{title}', name: 'app_movie_omdb', methods: ['GET'])]
     public function omdb(string $title, MovieProvider $provider): Response
     {
+        $movie = $provider->getOne($title);
+        $this->denyAccessUnlessGranted(MovieUnderageVoter::UNDERAGE, $movie);
+
         return $this->render('movie/show.html.twig', [
-            'movie' => $provider->getOne($title),
+            'movie' => $movie,
         ]);
     }
 
